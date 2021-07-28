@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
 	int itemIndex;
 	int previousItemIndex = -1;
+	[Range(0,255)]
+	[SerializeField] int redScreenIntensity;
 
 	float verticalLookRotation;
 	bool grounded;
@@ -44,6 +46,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 		rb = GetComponent<Rigidbody>();
 		PV = GetComponent<PhotonView>();
 
+		
+		if(PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>()!=null)
 		playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
 	}
 
@@ -58,7 +62,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 		else
 		{
 			Destroy(GetComponentInChildren<Camera>().gameObject);
-			Destroy(rb);
+			//Destroy(rb);
 			Destroy(ui);
 		}
 	}
@@ -69,14 +73,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 	{
 		
 
+
 		if(!PV.IsMine)
 			return;
 
 		Look();
 		Move();
 		Jump();
+	
 
-		//fadeRedScreen();
+		fadeRedScreen();
 
 		for(int i = 0; i < items.Length; i++)
 		{
@@ -121,6 +127,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 		}
 	}
 
+ 
+
     private void fadeRedScreen()
     {
         if(hitScreen_Object != null)
@@ -128,7 +136,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 			if(hitScreen_Object.GetComponent<Image>().color.a>0)
             {
 				var color = hitScreen_Object.GetComponent<Image>().color;
-				color.a -= 0.01f;
+				color.a -= 0.001f;
 				hitScreen_Object.GetComponent<Image>().color = color;
             }
         }
@@ -208,12 +216,19 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 	{
 		PV.RPC("RPC_TakeDamage", RpcTarget.All, damage);
 
-		//showing red screen on hit by enemy
-		//var color = hitScreen_Object.GetComponent<Image>().color;
-		//color.a = 0.08f;
-		//hitScreen_Object.GetComponent<Image>().color = color;
+	
 	}
 
+	[SerializeField] float bloodIntensity=0.1f;
+
+	// display red screen on hit by bullet from enemy
+	void showRedScreenOnHit()
+	{
+		//showing red screen on hit by enemy
+		var color = hitScreen_Object.GetComponent<Image>().color;
+		color.a = bloodIntensity;
+		hitScreen_Object.GetComponent<Image>().color = color;
+	}
 
 
 	[PunRPC]
@@ -221,6 +236,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 	{
 		if(!PV.IsMine)
 			return;
+
+		showRedScreenOnHit();
 
 		currentHealth -= damage;
 

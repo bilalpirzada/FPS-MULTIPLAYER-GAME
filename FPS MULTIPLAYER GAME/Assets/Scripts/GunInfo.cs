@@ -6,4 +6,7 @@ using UnityEngine;
 public class GunInfo : ItemInfo
 {
 	public float damage;
+	public float aimSpeed;
+	public GameObject crossHair;
+	public int Ammo;
 }

@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,23 +7,73 @@ using UnityEngine;
 public class SingleShotGun : Gun
 {
 	[SerializeField] Camera cam;
-	
+
 	[SerializeField] GameObject muzzleFlash;
 	[SerializeField] Transform muzzleFlashPosition;
 
 	PhotonView PV;
 
-	[SerializeField] Animator anim;
+
 
 	void Awake()
 	{
 		PV = GetComponent<PhotonView>();
 	}
 
-    private void Start()
-    {
+	private void Start()
+	{
 		//muzzleFlashPosition = transform.Find("RifleMuzzleFlash");
-    }
+
+	}
+
+	private void Update()
+	{
+		Aim(Input.GetMouseButton(1));
+
+	}
+
+	
+
+
+	private void Aim(bool playerIsAiming)
+    {
+
+		Transform t_anchor = this.transform.Find("Anchor");
+		Transform t_state_ads = this.transform.Find("States/ADS");
+		Transform t_state_hip = this.transform.Find("States/Hip");
+
+
+
+		float aimSpeed = ((GunInfo)itemInfo).aimSpeed;
+		
+
+
+		if (playerIsAiming)
+			{
+
+			//aim
+			if (t_anchor)
+			{
+				t_anchor.position = Vector3.Lerp(t_anchor.position,
+				t_state_ads.position, Time.deltaTime * aimSpeed);
+			}
+				//hide the cross hair
+				PlayerUIManager.Instance.crossHair.SetActive(false);
+			
+		}
+		else
+		{
+			//hip
+			if (t_anchor)
+			{
+				t_anchor.position =
+					Vector3.Lerp(t_anchor.position, t_state_hip.position, Time.deltaTime * aimSpeed);
+			}
+				//show the cross hair
+				PlayerUIManager.Instance.crossHair.SetActive(true);
+		}
+		
+	}
 
     public override void Use()
 	{
@@ -32,8 +83,7 @@ public class SingleShotGun : Gun
 	
 	void Shoot()
 	{
-		//anim.SetTrigger("shoot");
-		//anim.SetBool("shoot bool", false);
+		
 
 		//1. use below code if you want to see the muzzle on every player view 
 		//Destroy(PhotonNetwork.Instantiate("muzzleFlash", muzzleFlashPosition.position, Quaternion.identity),
