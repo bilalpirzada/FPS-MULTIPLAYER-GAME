@@ -44,8 +44,10 @@ public class SingleShotGun : Gun
 
 
 
-		float aimSpeed = ((GunInfo)itemInfo).aimSpeed;
 		
+		float aimSpeed = ((GunInfo)itemInfo).aimSpeed;
+
+		Debug.Log("aimspeed:   " + aimSpeed);
 
 
 		if (playerIsAiming)
@@ -56,6 +58,7 @@ public class SingleShotGun : Gun
 			{
 				t_anchor.position = Vector3.Lerp(t_anchor.position,
 				t_state_ads.position, Time.deltaTime * aimSpeed);
+				Debug.Log("inside if anchor not null");
 			}
 				//hide the cross hair
 				PlayerUIManager.Instance.crossHair.SetActive(false);

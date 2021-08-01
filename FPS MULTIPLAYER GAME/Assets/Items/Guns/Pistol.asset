@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Pistol
   damage: 25
+  aimSpeed: 10
+  crossHair: {fileID: 0}
+  Ammo: 0

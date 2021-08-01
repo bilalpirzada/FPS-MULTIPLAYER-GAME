@@ -161,10 +161,18 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
 	void Jump()
 	{
-		if(Input.GetKeyDown(KeyCode.Space) && grounded)
+		if(Input.GetKeyDown(KeyCode.Space)  )
 		{
 			rb.AddForce(transform.up * jumpForce);
+
 		}
+
+		if(!grounded)
+        {
+			this.GetComponent<Rigidbody>().useGravity = true;
+        }
+        else { this.GetComponent<Rigidbody>().useGravity = false; }
+
 	}
 
 	void EquipItem(int _index)
