@@ -47,7 +47,7 @@ public class SingleShotGun : Gun
 		
 		float aimSpeed = ((GunInfo)itemInfo).aimSpeed;
 
-		Debug.Log("aimspeed:   " + aimSpeed);
+		//Debug.Log("aimspeed:   " + aimSpeed);
 
 
 		if (playerIsAiming)

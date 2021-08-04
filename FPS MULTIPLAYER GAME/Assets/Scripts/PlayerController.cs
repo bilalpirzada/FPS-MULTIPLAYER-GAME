@@ -46,9 +46,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 		rb = GetComponent<Rigidbody>();
 		PV = GetComponent<PhotonView>();
 
-		
-		if(PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>()!=null)
-		playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
+
+		if (PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>() != null)
+		{
+			playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
+		}
 	}
 
 	void Start()
@@ -154,6 +156,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
 	void Move()
 	{
+		Debug.Log("inside move function");
 		Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
 
 		moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
